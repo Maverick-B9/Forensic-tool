@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/zxcc.css') }}">
+</head>
+<body>
+
+    <div class="logo-container">
+        <img src="{{ url_for('static', filename='images/logoooooo.png') }}" alt="Forensic Tool Logo" class="logo" alt="Centered image">
+    </div>
+
+    <div class="login-container">
+        <h2>Login</h2>
+        <form action="#" method="POST">
+            <div class="input-group">
+                <label for="investigator-id">Investigator ID</label>
+                <input type="text" id="investigator-id" name="investigator-id" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <a href="index.html"></a>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+
+</body>
+</html>

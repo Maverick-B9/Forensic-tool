@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Forensics Investigation Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='zxc.css') }}">
+
+
+</head>
+<body>
+    <header>
+        <h1>Digital Forensics Investigation Tool</h1>
+        <nav>
+            <ul>
+                <li><a href="#collect">Collect Evidence</a></li>
+                <li><a href="#preserve">Preserve Evidence</a></li>
+                <li><a href="#analyze">Analyze Evidence</a></li>
+                <li><a href="#reports">Generate Reports</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="collect">
+            <h2>Collect Evidence</h2>
+            <p>Upload files.</p>
+            <form id="collect-form" action="/collect" method="post" enctype="multipart/form-data">
+                <label for="evidence-file">Upload Evidence File:</label>
+                <input type="file" id="evidence-file" name="evidence-file" required>
+                <br>
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+
+        <section id="preserve">
+            <h2>Preserve Evidence</h2>
+            <p>Ensure the evidence is preserved in a secure, tamper-proof format.</p>
+            <form id="preserve-form" onsubmit="preserveEvidence(event)">
+                <label for="file-id">File ID:</label>
+                <input type="text" id="file-id" name="file-id" required>
+                <br>
+                <label for="hash-algorithm">Choose Hashing Algorithm:</label>
+                <select id="hash-algorithm" name="hash-algorithm" required>
+                    <option value="sha256">SHA-256</option>
+                    <option value="sha512">SHA-512</option>
+                    <option value="md5">MD5</option>
+                </select>
+                <br>
+                <button type="submit">Generate Hash</button>
+            </form>
+            <div id="preserve-result"></div>
+        </section>
+
+        <section id="analyze">
+            <h2>Analyze Evidence</h2>
+            <p>Run analysis on the collected evidence to identify anomalies or indicators of compromise.</p>
+            <form id="analyze-form" onsubmit="analyzeEvidence(event)">
+                <label for="analysis-file-id">File ID:</label>
+                <input type="text" id="analysis-file-id" name="file-id" required>
+                <br>
+                <label for="analysis-type">Choose Analysis Type:</label>
+                <select id="analysis-type" name="analysis-type" required>
+                    <option value="file">File Metadata Analysis</option>
+                    <option value="network">Network Traffic Analysis</option>
+                    <option value="logs">System Logs Analysis</option>
+                </select>
+                <br>
+                <button type="submit">Start Analysis</button>
+            </form>
+            <div id="analyze-result"></div>
+        </section>
+
+        <section id="reports">
+            <h2>Generate Reports</h2>
+            <p>Create detailed reports for investigative purposes.</p>
+            <form id="report-form" onsubmit="generateReport(event)">
+                <label for="report-file-id">File ID:</label>
+                <input type="text" id="report-file-id" name="file-id" required>
+                <br>
+                <label for="report-format">Choose Report Format:</label>
+                <select id="report-format" name="format" required>
+                    <option value="pdf">PDF</option>
+                    <option value="html">HTML</option>
+                    <option value="docx">DOCX</option>
+                </select>
+                <br>
+                <button type="submit">Generate Report</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Digital Forensics Investigation Tool. All rights reserved.</p>
+    </footer>
+
+    <script>
+        async function preserveEvidence(event) {
+            event.preventDefault();
+            const fileId = document.getElementById('file-id').value;
+            const algorithm = document.getElementById('hash-algorithm').value;
+
+            const response = await fetch('/preserve', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ file_id: fileId, algorithm: algorithm })
+            });
+
+            const result = await response.json();
+            document.getElementById('preserve-result').innerText = JSON.stringify(result, null, 2);
+        }
+
+        async function analyzeEvidence(event) {
+            event.preventDefault();
+            const fileId = document.getElementById('analysis-file-id').value;
+            const analysisType = document.getElementById('analysis-type').value;
+
+            const response = await fetch('/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ file_id: fileId, analysis_type: analysisType })
+            });
+
+            const result = await response.json();
+            document.getElementById('analyze-result').innerText = JSON.stringify(result, null, 2);
+        }
+
+        async function generateReport(event) {
+            event.preventDefault();
+            const fileId = document.getElementById('report-file-id').value;
+            const format = document.getElementById('report-format').value;
+
+            const response = await fetch('/generate-report', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ file_id: fileId, format: format })
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `report_${fileId}.${format}`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            } else {
+                const result = await response.json();
+                alert(`Error: ${result.error}`);
+            }
+        }
+    </script>
+</body>
+</html>
