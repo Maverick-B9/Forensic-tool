@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Forensic Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/asd.css') }}">
+</head>
+<body>
+
+    <div class="logo-container">
+        <img src="{{ url_for('static', filename='images/1734119129933.png') }}" alt="Forensic Tool Logo" class="logo">
+
+    </div>
+
+    <div class="main-container">
+        <h1 class="title">Digital Forensic Tool</h1>
+        <p class="description">A digital forensic tool is essential for uncovering critical data during investigations. Whether it's recovering deleted files or analyzing device activity, this tool helps uncover hidden evidence with accuracy and speed. Designed with state-of-the-art algorithms and an intuitive interface, it offers a seamless experience for both seasoned experts and newcomers in the field of digital forensics. Unlock the secrets of your devices with just a few clicks!</p>
+    </div>
+    <a href="{{ url_for('login') }}" class="login-btn">Login</a>
+    <button class="login-btn" onclick="window.location.href='/login'">Login</button>
+    </a>
+</body>
+</html>
